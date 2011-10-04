@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Management.Automation;
+using System.Reactive.Linq;
 
 namespace rxps
 {
     internal static class Extensions
     {
-        public static IDisposable Subscribe<T>(this IObservable<T> source, Cmdlet target)
+        public static IObservable<TOut> WithScriptBlock<TIn, TOut>(this IObservable<TIn> source, ScriptBlock scriptBlock, Func<IObservable<TIn>, Func<object, dynamic>, IObservable<TOut>> streamSelector)
         {
-            return source.Subscribe(x => target.WriteObject(x), e => target.WriteError(new ErrorRecord(e, string.Empty, ErrorCategory.NotSpecified, null)));
+            var pipeline = scriptBlock.GetSteppablePipeline();
+
+            return Observable.Defer(() =>
+            {
+                pipeline.Begin(false);
+                return streamSelector(source, o => ((object[])pipeline.Process(o))[0]).Finally(() => pipeline.End());
+            });
         }
     }
 }

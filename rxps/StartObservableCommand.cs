@@ -6,8 +6,8 @@ using System.Reactive.Linq;
 
 namespace rxps
 {
-    [Cmdlet("Invoke", "Stream")]
-    public sealed class InvokeStreamCmdlet : Cmdlet
+    [Cmdlet(Verbs.Start, Nouns.Observable)]
+    public sealed class StartObservableCommand : StreamCmdlet, IDisposable
     {
         private readonly SingleAssignmentDisposable _disposable = new SingleAssignmentDisposable();
 
@@ -15,14 +15,11 @@ namespace rxps
         {
             base.ProcessRecord();
 
-            IObservable<object> stream = Convert((dynamic)Stream.BaseObject);
-
             var queue = new BlockingCollection<object>();
 
-            _disposable.Disposable = stream.Finally(queue.CompleteAdding).Subscribe(queue.Add);
+            _disposable.Disposable = Stream.Finally(queue.CompleteAdding).Subscribe(queue.Add);
 
-            object item;
-            while (!Stopping && queue.TryTake(out item, -1))
+            foreach (var item in queue.GetConsumingEnumerable())
                 WriteObject(item);
         }
 
@@ -34,10 +31,13 @@ namespace rxps
         protected override void StopProcessing()
         {
             base.StopProcessing();
+
             _disposable.Dispose();
         }
 
-        [ValidateNotNull, Parameter(ValueFromPipeline = true)]
-        public PSObject Stream { get; set; }
+        public void Dispose()
+        {
+            _disposable.Dispose();
+        }
     }
 }

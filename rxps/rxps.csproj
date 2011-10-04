@@ -40,10 +40,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InvokeStreamCmdlet.cs" />
+    <Compile Include="ConvertToObservableCommand.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="GetIntervalCmdlet.cs" />
+    <Compile Include="LateBoundTypeCalls.cs" />
+    <Compile Include="StartObservableCommand.cs" />
+    <Compile Include="NewObservableCommand.cs" />
+    <Compile Include="Nouns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectObservableObjectCommand.cs" />
+    <Compile Include="StreamCmdlet.cs" />
+    <Compile Include="Verbs.cs" />
+    <Compile Include="WhereObservableObjectCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

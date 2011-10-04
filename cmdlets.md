@@ -4,13 +4,15 @@ This is a roadmap for the implementation of cmdlets in rxps.
 
 ## Observable Subscription
 
-    Invoke-Observable [-AsJob]
+    Start-Observable [-AsJob]
     (Subscribe)
 
     Stop-Observable -InputObservable <IObservable<object>>
     (Dispose)
 
 ## Observable Generation
+
+    ConvertTo-Observable -InputObject <psobject>
 
     New-Observable [-DelaySeconds <int>] [-IntervalSeconds <int>] [-Scheduler <IScheduler>]
     (Interval, Timer)
@@ -60,7 +62,8 @@ This is a roadmap for the implementation of cmdlets in rxps.
     Add-RefToDisposable -Disposable <RefCountDisposable> -InputObservable <IObservable<object>>
     (AddRef)
 
-    Where-ObservableObject [-OfType <Type>] [-FilterScript <ScriptBlock>] -InputObservable <IObservable<object>>
+    Where-ObservableObject -FilterScript <ScriptBlock> [-OfType <Type>] -InputObservable <IObservable<object>>
+    Where-ObservableObject -OfType <Type> [-FilterScript <ScriptBlock>] -InputObservable <IObservable<object>>
     Alias: %?
     (Where, DefaultIfEmpty)
 
